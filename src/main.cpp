@@ -22,14 +22,12 @@ using namespace std;
 #include <string>
 #include<regex>
 //-------------------------------------------------------- Include personnel
-#include "../include/Catalogue.h"
+#include "../include/LogScanner.h"
 
 
 
 // Fonction principale
 int main(int argc, char * argv[]) {
-
-  cout << argc << endl;
   if (argc == 1) {
     cout << "Vous devez préciser le nom du fichier de log." << endl;
     return EXIT_FAILURE;
@@ -51,17 +49,9 @@ int main(int argc, char * argv[]) {
       timespan = argv[++i];
   }
 
-  cout << logFile << endl << dotFile << endl << timespan << endl << (ignoreAssets ? "ignore assets" : "") << endl;
-
-  // smatch match;
-  // regex_match(line, match, regex(".*\\[.*:(.*):.*:.*\\] \".* (.*) .*\" (.*) .* \"(.*)\" \".*\"$"));
-
-  // for (int i = 1; i<=(int)match.size(); i++)
-  //   cout << match[i] << endl;
-
-
-  //Catalogue catalogue;
-  //displayMenu(&catalogue);
+  LogScanner scanner;
+  scanner.parse();
+  scanner.displayTopPages();
 
   return EXIT_SUCCESS;
 }
