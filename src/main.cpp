@@ -49,9 +49,9 @@ int main(int argc, char * argv[]) {
       timespan = argv[++i];
   }
 
-  LogScanner scanner;
+  LogScanner scanner(logFile, dotFile, ignoreAssets, timespan);
   scanner.parse();
-  scanner.displayTopPages();
+  scanner.display();
 
   return EXIT_SUCCESS;
 }

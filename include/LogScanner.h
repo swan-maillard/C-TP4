@@ -29,12 +29,14 @@ class LogScanner {
 //----------------------------------------------------- Méthodes publiques
 
     // Constructeur
-    LogScanner();
+    LogScanner(string logFile, string dotFile="", bool ignoreAssets=false, string timestamp="");
 
     // Destructeur
-    virtual ~LogScanner ();
+    virtual ~LogScanner();
 
     void parse();
+
+    void display();
 
     void displayTopPages();
 
@@ -50,12 +52,10 @@ class LogScanner {
   typedef map <string, Link> LinksList;
 
   string logFile;
-  string dotFile ="";
-  bool ignoreAssets = false ;
-  string timespan="";
+  string dotFile;
+  bool ignoreAssets;
+  string timespan;
   LinksList linksList;
-
-
 };
 
 #endif // LOGSCANNER8H
