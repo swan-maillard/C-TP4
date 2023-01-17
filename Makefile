@@ -11,7 +11,7 @@ DEVFLAGS	:= 	-DMAP
 RMFLAGS		:= 	-rf
 
 #Fichiers
-EXECUTABLE	:= 	TP4
+EXECUTABLE	:= 	analog
 SRC_DIR		:= 	src/
 OBJ_DIR		:= 	bin/
 SRC			:= 	$(wildcard $(SRC_DIR)*.cpp)
