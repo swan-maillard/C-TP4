@@ -7,9 +7,11 @@ Comment récupérer les paramètres lors de l'éxecution ?
 
     Links multiMap(Target, [Referer, Heure, NB_link])
 
-    A -> [B, 12h, 1]
-    A -> [C, 12h, 2]
-    B -> [D, 12h, 1]
+    A -> [
+        B -> 1
+        D -> 2
+    ]
+
 
     A->D
     multimap(A)
@@ -26,7 +28,6 @@ main
 
 struct Link
     - referer
-    - Heure
     - NB
 
 LogScanner
@@ -36,9 +37,10 @@ LogScanner
     - bool timespan = false
     - int beginningTimespan
 
-    - set nodesList;
-    - multimap linksList;
+    - map<string, map<string, int>> linksList;
 
     -> parse()
     -> displayTopPages()
     -> generateDotFile()
+
+Map(cible, map(ref, nbLinks))
