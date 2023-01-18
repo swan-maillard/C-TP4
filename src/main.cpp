@@ -17,41 +17,61 @@
 //-------------------------------------------------------- Include système
 using namespace std;
 #include <iostream>
-#include <cstring>
 #include <fstream>
 #include <string>
-#include<regex>
+#include <regex>
 //-------------------------------------------------------- Include personnel
-#include "../include/LogScanner.h"
-
+#include "../include/utils.h"
+#include "../include/LogAnalyser.h"
 
 
 // Fonction principale
 int main(int argc, char * argv[]) {
   if (argc == 1) {
-    cout << "Vous devez préciser le nom du fichier de log." << endl;
+    cerr << "Vous devez préciser le nom du fichier de log." << endl;
     return EXIT_FAILURE;
   }
 
   string logFile = argv[argc - 1];
+  bool flagDotFile = false;
   string dotFile = "";
-  bool ignoreAssets = false;
-  string timespan = "";
+  bool flagIgnoreAssets = false;
+  bool flagTimespan = false;
+  int timespan;
 
-  // On parcourt la liste d'arguments
+  // On parcourt la liste d'arguments pour récupérer les flags
   for (int i = 1; i < argc-1; i++) {
     string arg = string(argv[i]);
-    if (arg == "-g" && i < argc-2)
+    if (arg == "-g") {
+      if (i > argc-1) {
+        cerr << "Il faut préciser un nom de fichier après -g" << endl;
+        return EXIT_FAILURE;
+      }
+
+      flagDotFile = true;
       dotFile = argv[++i];
-    else if (arg == "-e")
-      ignoreAssets = true;
-    else if (arg == "-t" && i < argc-2)
-      timespan = argv[++i];
+    }
+    else if (arg == "-e") {
+      flagIgnoreAssets = true;
+    }
+    else if (arg == "-t") {
+      if (i > argc-1 || !isInt(argv[i+1])) {
+        cerr << "Il faut préciser une heure après -t" << endl;
+        return EXIT_FAILURE;
+      }
+
+      flagTimespan = true;
+      timespan = stoi(argv[++i]);
+    }
+    else {
+      cerr << argv[i] << " n'est pas un argument valide" << endl;
+      return EXIT_FAILURE;
+    }
   }
 
-  LogScanner scanner(logFile, dotFile, ignoreAssets, timespan);
-  scanner.parse();
-  scanner.display();
+  LogAnalyser analyser;
+  analyser.Parse(logFile, flagIgnoreAssets, flagTimespan, timespan);
+  analyser.Display();
 
   return EXIT_SUCCESS;
 }

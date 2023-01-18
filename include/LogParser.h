@@ -1,61 +1,46 @@
 /*************************************************************************
-    Catalogue  -  Contient des trajets et permet d'effectuer des actions (affichage, recherche, ajout)
+    LogParser  -  Extrait les informations d'une requête de log
                              -------------------
     début                : 13/12/2022
     copyright            : (C) 2022 par MALARD Sarah & MAILLARD Swan
     e-mail               : sarah.malard@insa-lyon.fr & swan.maillard@insa-lyon.fr
 *************************************************************************/
 
-//---------- Interface de la classe <Catalogue> (fichier Catalogue.h) ----------------
-#if ! defined (LOGSCANNER_H)
-#define LOGSCANNER_H
+//---------- Interface de la classe <LogParser> (fichier LogParser.h) ----------------
+#if ! defined (LOG_PARSER_H)
+#define LOG_PARSER_H
 
 //---------------------------------------------------------------- INCLUDE
 
 //-------------------------------------------------------- Include système
-#include <fstream>
-#include <iostream>
-#include <string>
-#include <set>
-#include <map>
 using namespace std;
+#include <fstream>
+#include <string>
 
 //-------------------------------------------------------- Include personnel
+#include "Request.h"
 
-class LogScanner {
+
+class LogParser {
 
 //----------------------------------------------------------------- PUBLIC
   public:
 //----------------------------------------------------- Méthodes publiques
 
     // Constructeur
-    LogScanner(string logFile, string dotFile="", bool ignoreAssets=false, string timestamp="");
+    LogParser(const string & logFile);
 
     // Destructeur
-    virtual ~LogScanner();
+    ~LogParser();
 
-    void parse();
-
-    void display();
-
-    void displayTopPages();
-
-    void generateDotFile() const;
-
-
-
+    bool GetNextRequest(Request ** request);
 
 //----------------------------------------------------------------- PRIVE
   protected:
 //----------------------------------------------------- Attributs protégés
-  typedef map<string, int> Link;
-  typedef map <string, Link> LinksList;
 
-  string logFile;
-  string dotFile;
-  bool ignoreAssets;
-  string timespan;
-  LinksList linksList;
+  ifstream fileStream;
+
 };
 
-#endif // LOGSCANNER8H
+#endif // LOG_PARSER_H
