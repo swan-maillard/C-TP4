@@ -1,41 +1,48 @@
 /*************************************************************************
-    LogAnalyser  -  Analyse un fichier de log
+    LinksList  -  Structure de donnée d'une liste de lien entre 2 pages
                              -------------------
     début                : 13/12/2022
     copyright            : (C) 2022 par MALARD Sarah & MAILLARD Swan
     e-mail               : sarah.malard@insa-lyon.fr & swan.maillard@insa-lyon.fr
 *************************************************************************/
 
-//---------- Interface de la classe <LogAnalyser> (fichier LogAnalyser.h) ----------------
-#if ! defined (LOG_ANALYSER_H)
-#define LOG_ANALYSER_H
+//---------- Interface de la classe <LinksList> (fichier LinksList.h) ----------------
+#if ! defined (LINKS_LIST_H)
+#define LINKS_LIST_H
 
 //---------------------------------------------------------------- INCLUDE
 
 //-------------------------------------------------------- Include système
 using namespace std;
-#include <string>
 #include <unordered_map>
+#include <string>
 
 //-------------------------------------------------------- Include personnel
-#include "../include/LinksList.h"
 
-class LogAnalyser {
+typedef unordered_map<string, int> LinkMap;
+typedef unordered_map<string, LinkMap> LinksListMap;  
+
+class LinksList {
 
 //----------------------------------------------------------------- PUBLIC
   public:
 //----------------------------------------------------- Méthodes publiques
 
-    static void Display(const LinksList & links);
+    // Constructeur
+    LinksList();
 
-    static void displayTopPages();
+    // Destructeur
+    ~LinksList();
 
-    static void generateDotFile();
+    void AddLink(const string & referer, const string & target);
 
+    LinksListMap GetList() const;
 
 //----------------------------------------------------------------- PRIVE
   protected:
 //----------------------------------------------------- Attributs protégés
+    LinksListMap links;
+
 };
 
-#endif // LOG_ANALYSER_H
+#endif // LINKS_LIST_H

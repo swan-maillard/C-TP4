@@ -17,13 +17,24 @@
 //-------------------------------------------------------- Include système
 using namespace std;
 #include <iostream>
-#include <fstream>
 #include <string>
 #include <regex>
 //-------------------------------------------------------- Include personnel
 #include "../include/utils.h"
 #include "../include/LogAnalyser.h"
+#include "../include/LogParser.h"
+#include "../include/LinksList.h"
 
+struct Flags {
+  bool generateDotFile = false;
+  string dotFile = "";
+  bool ignoreAssets = false;
+  bool timespan = false;
+  int hour;
+};
+
+
+LinksList parse(const string & logFile, const Flags & flags);
 
 // Fonction principale
 int main(int argc, char * argv[]) {
@@ -33,11 +44,7 @@ int main(int argc, char * argv[]) {
   }
 
   string logFile = argv[argc - 1];
-  bool flagDotFile = false;
-  string dotFile = "";
-  bool flagIgnoreAssets = false;
-  bool flagTimespan = false;
-  int timespan;
+  Flags flags;
 
   // On parcourt la liste d'arguments pour récupérer les flags
   for (int i = 1; i < argc-1; i++) {
@@ -48,11 +55,11 @@ int main(int argc, char * argv[]) {
         return EXIT_FAILURE;
       }
 
-      flagDotFile = true;
-      dotFile = argv[++i];
+      flags.generateDotFile = true;
+      flags.dotFile = argv[++i];
     }
     else if (arg == "-e") {
-      flagIgnoreAssets = true;
+      flags.ignoreAssets = true;
     }
     else if (arg == "-t") {
       if (i > argc-1 || !isInt(argv[i+1])) {
@@ -60,8 +67,8 @@ int main(int argc, char * argv[]) {
         return EXIT_FAILURE;
       }
 
-      flagTimespan = true;
-      timespan = stoi(argv[++i]);
+      flags.timespan = true;
+      flags.hour = stoi(argv[++i]);
     }
     else {
       cerr << argv[i] << " n'est pas un argument valide" << endl;
@@ -69,9 +76,33 @@ int main(int argc, char * argv[]) {
     }
   }
 
-  LogAnalyser analyser;
-  analyser.Parse(logFile, flagIgnoreAssets, flagTimespan, timespan);
-  analyser.Display();
+
+  LinksList links = parse(logFile, flags);
+  LogAnalyser::Display(links);
 
   return EXIT_SUCCESS;
+}
+
+LinksList parse(const string & logFile, const Flags & flags) {
+  LinksList links;
+
+  // On instancie l'éxtracteur de log sur le fichier
+  LogParser parser(logFile);
+
+  // On extrait les requêtes et on enregistre les liens qui vérifient les différents flags
+  Request * request = NULL;
+  while (parser.GetNextRequest(&request)) {
+
+    bool checkStatusCodeSuccess = (request->GetStatusCode() >= 200 && request->GetStatusCode() < 300);
+    bool checkFlagIgnoreAssets = (!flags.ignoreAssets || !regex_match(request->GetTarget(), regex(".*\\.(?:jpe?g|JPE?G|png|PNG|gif|GIF|svg|SVG|webp|WEBP|bmp|BMP|ico|ICO|js|JS|css|CSS)\\/?$")));
+    bool checkFlagTimespan = (!flags.timespan || flags.hour == request->GetDate().hour);
+
+    if (checkStatusCodeSuccess && checkFlagIgnoreAssets && checkFlagTimespan) {
+      links.AddLink(request->GetReferer(), request->GetTarget());
+    }
+
+    delete request;
+  }
+
+  return links;
 }
