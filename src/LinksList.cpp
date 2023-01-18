@@ -52,15 +52,15 @@ void LinksList::AddLink(const string & referer, const string & target) {
     if (searchLink != link.end())
       searchLink->second++;
     else 
-      link.insert(make_pair(referer, 1));
+      link.insert(LinkPair(referer, 1));
 
     // On update la liste des liens pour la cible
     searchTarget->second = link;
   }
   else {
     // Si la cible n'était pas encore stockée, on l'insère
-    link.insert(make_pair(referer, 1));
-    links.insert(make_pair(target, link));
+    link.insert(LinkPair(referer, 1));
+    links.insert(LinksListPair(target, link));
   }
 }
 

@@ -14,17 +14,12 @@
 //-------------------------------------------------------- Include système
 using namespace std;
 #include <iostream>
+#include <regex>
 #include <string>
 
 
 static bool isInt(string str) {
-  int stringLength = str.size();
-
-  for (int i = 0; i < stringLength; ++i)
-    if (!isdigit(str[i]))
-      return false;
-
-  return true;
+  return regex_match(str, std::regex("^[\\-+]?[0-9]+$"));
 }
 
 

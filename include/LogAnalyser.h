@@ -28,7 +28,7 @@ class LogAnalyser {
 
     static void Display(const LinksList & links);
 
-    static void displayTopPages();
+    static void DisplayTopPages(const LinksList & links);
 
     static void generateDotFile();
 

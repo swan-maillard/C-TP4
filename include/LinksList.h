@@ -22,6 +22,9 @@ using namespace std;
 typedef unordered_map<string, int> LinkMap;
 typedef unordered_map<string, LinkMap> LinksListMap;  
 
+typedef pair<string, int> LinkPair;
+typedef pair<string, LinkMap> LinksListPair;
+
 class LinksList {
 
 //----------------------------------------------------------------- PUBLIC

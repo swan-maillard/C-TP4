@@ -16,10 +16,12 @@
 using namespace std;
 #include <iostream> 
 #include <string>
+#include <map>
 
 //------------------------------------------------------ Include personnel
 #include "../include/LogAnalyser.h"
 #include "../include/LinksList.h"
+
 
 
 //----------------------------------------------------------------- PUBLIC
@@ -29,21 +31,45 @@ void LogAnalyser::Display(const LinksList & links){
     cout << "Exécution de display de <LogAnalyser>" << endl;
   #endif
 
-    for (const pair<string, LinkMap> & target : links.GetList()) {
-      cout << target.first;
+    for (const LinksListPair & linksListPair : links.GetList()) {
+      cout << linksListPair.first;
 
       int nbLinks = 0;
-      for (const pair<string, int> & link : target.second)
-        nbLinks += link.second;
+      for (const LinkPair & linkPair : linksListPair.second)
+        nbLinks += linkPair.second;
       
       cout << " (" << nbLinks << " hits)" << endl;
     }
 }
 
-void LogAnalyser::displayTopPages() {
+void LogAnalyser::DisplayTopPages(const LinksList & links) {
   #ifdef MAP
     cout << "Exécution de displayToPages de <LogAnalyser>" << endl;
   #endif
+
+  // Structure de données des top pages consultées, triées par nombre de liens entrants décroissants
+  multimap<int, string, greater<int>> topPages;
+
+  // Pour chaque pages cibles on calcule son nombre de liens entrants
+  for (const LinksListPair & linksListPair : links.GetList()) {
+    string target = linksListPair.first;
+
+    int nbLinks = 0;
+    for (const LinkPair & linkPair : linksListPair.second)
+      nbLinks += linkPair.second;
+  
+    // On ajoute la cible et le nombre de liens entrant dans topPages (ce sera automatiquement trié par nombre de liens décroissants)
+    topPages.insert(make_pair(nbLinks, target));
+
+    // S'il y a plus de 10 pages stockées, on supprime la dernière (celle ayant le plus petit nombre de liens entrants)
+    if (topPages.size() > 10)
+      topPages.erase(prev(topPages.end()));
+  }
+
+  // On affiche le top pages consultées
+  for (const pair<int, string> & pagePair : topPages)
+    cout << pagePair.first << " (" << pagePair.second << " hits)" << endl;
+
 }
 
 void LogAnalyser::generateDotFile(){

@@ -51,7 +51,7 @@ int main(int argc, char * argv[]) {
     string arg = string(argv[i]);
     if (arg == "-g") {
       if (i > argc-1) {
-        cerr << "Il faut préciser un nom de fichier après -g" << endl;
+        cerr << "Il faut préciser un nom de fichier après le flag -g" << endl;
         return EXIT_FAILURE;
       }
 
@@ -63,22 +63,32 @@ int main(int argc, char * argv[]) {
     }
     else if (arg == "-t") {
       if (i > argc-1 || !isInt(argv[i+1])) {
-        cerr << "Il faut préciser une heure après -t" << endl;
+        cerr << "Il faut préciser une heure après le flag -t" << endl;
+        return EXIT_FAILURE;
+      }
+      
+      int hour = stoi(argv[++i]);
+      if (hour < 0 || hour > 23) {
+        cerr << hour << " n'est pas une heure valide" << endl;
         return EXIT_FAILURE;
       }
 
       flags.timespan = true;
-      flags.hour = stoi(argv[++i]);
+      flags.hour = hour;
     }
     else {
-      cerr << argv[i] << " n'est pas un argument valide" << endl;
+      if (argv[i][0] == '-')
+        cerr << "Le flag " << argv[i] << " n'est pas reconnu" << endl;
+      else
+        cerr << "L'argument " << argv[i] << " n'est pas valide" << endl;
+
       return EXIT_FAILURE;
     }
   }
 
 
   LinksList links = parse(logFile, flags);
-  LogAnalyser::Display(links);
+  LogAnalyser::DisplayTopPages(links);
 
   return EXIT_SUCCESS;
 }
