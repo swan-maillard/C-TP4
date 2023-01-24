@@ -33,7 +33,7 @@ LogParser::LogParser(const string & logFile) {
       cout << "Construction de <LogParser>" << endl;
   #endif
 
-  fileStream.open(logFile, fstream::in);
+  fileStream.open("resources/" + logFile, fstream::in);
 
   if (!fileStream) {
     cerr << "Le fichier '" << logFile << "' est introuvable." << endl;
