@@ -2,3 +2,6 @@
 .vscode/
 bin/
 analog
+resultats.csv
+*.dot
+*.png
