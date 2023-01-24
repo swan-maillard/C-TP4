@@ -19,7 +19,6 @@ using namespace std;
 #include <map>
 #include <fstream>
 
-
 //------------------------------------------------------ Include personnel
 #include "../include/LogAnalyser.h"
 #include "../include/LinksList.h"
@@ -123,7 +122,7 @@ void LogAnalyser::generateDotFile(const string &file, const LinksList &links){
   dotcontent+="}";
 
   ofstream fichierdot;
-  fichierdot.open(file, fstream::out);
+  fichierdot.open("out/" + file, fstream::out);
 
   fichierdot << dotcontent;
   //cout<<dotcontent;

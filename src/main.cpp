@@ -33,10 +33,10 @@ struct Flags {
   int hour;
 };
 
-const string BASE_URL = "http://intranet-if.insa-lyon.fr";
-
 
 LinksList parse(const string & logFile, const Flags & flags);
+
+const string getBaseURL();
 
 // Fonction principale
 int main(int argc, char * argv[]) {
@@ -106,6 +106,8 @@ LinksList parse(const string & logFile, const Flags & flags) {
   // On extrait les requêtes et on enregistre les liens qui vérifient les différents flags
   Request * request = NULL;
   regex assetsRegex = regex(".*\\.(?:jpe?g|JPE?G|png|PNG|gif|GIF|svg|SVG|webp|WEBP|bmp|BMP|ico|ICO|js|JS|css|CSS)\\/?$");
+  const string BASE_URL = getBaseURL();
+
   while (parser.GetNextRequest(&request)) {
 
     bool checkStatusCodeSuccess = (request->GetStatusCode() >= 200 && request->GetStatusCode() < 300);
@@ -135,4 +137,23 @@ LinksList parse(const string & logFile, const Flags & flags) {
   }
 
   return links;
+}
+
+const string getBaseURL() {
+  ifstream configStream("config");
+  if (configStream) {
+    string configLine;
+    while (getline(configStream, configLine)) {
+      string fieldName = "BASE_URL=";
+      if (configLine.substr(0, fieldName.length()) == fieldName) {
+        string baseURL = configLine.substr(fieldName.length());
+        if (baseURL[baseURL.length() - 1] == '/')
+          baseURL.pop_back();
+
+        return baseURL;
+      }
+    }
+  }
+
+  return "";
 }
