@@ -49,17 +49,12 @@ Request::~Request() {
 }
 
 ostream & operator << (ostream & out, const Request & request) {
-  out << request.adressIP << endl;
-  out << request.userLogname << endl;
-  out << request.authenticatedUser << endl;
-  out << request.date.day << "/" << request.date.month << "/" << request.date.year << " " << request.date.hour << ":" << request.date.minute << ":" << request.date.second << endl;
-  out << request.type << endl;
-  out << request.target << endl;
-  out << request.protocol << endl;
-  out << request.statusCode << endl;
-  out << request.size << endl;
-  out << request.referer << endl;
-  out << request.userAgent << endl;
+  out << request.adressIP << " " << request.userLogname << request.authenticatedUser;
+  out << " [" << request.date.day << "/" << request.date.month << "/" << request.date.year << ":" << request.date.hour << ":" << request.date.minute << ":" << request.date.second << " " << request.date.timezone << "]" << endl;
+  out << " \"" << request.type << " " << request.target << " " << request.protocol << "\"";
+  out << " " << request.statusCode << " " << request.size;
+  out << " \"" << request.referer << "\" \"" << request.userAgent << "\"";
+  out << endl;
 
   return out;
 }

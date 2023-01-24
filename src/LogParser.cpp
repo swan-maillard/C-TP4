@@ -7,7 +7,7 @@
 *************************************************************************/
 
 
-//---------- Réalisation de la classe <LogParser> (fichier LogParser.cpp) ------------
+//---------- Réalisation de la clarequestStreame <LogParser> (fichier LogParser.cpp) ------------
 
 
 //---------------------------------------------------------------- INCLUDE
@@ -16,8 +16,9 @@
 using namespace std;
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
-#include <regex>
+#include <algorithm>
 
 //------------------------------------------------------ Include personnel
 #include "../include/LogParser.h"
@@ -50,88 +51,134 @@ LogParser::~LogParser() {
 bool LogParser::GetNextRequest(Request ** requestPointer) {
   string requestLine;
 
-  if (fileStream.peek() == EOF)
+  if (!getline(fileStream, requestLine))
     return false;
 
   // On enlève les retour chariots s'il y en a
-  //requestLine.erase(remove(requestLine.begin(), requestLine.end(), '\r'), requestLine.end());
+  requestLine.erase(remove(requestLine.begin(), requestLine.end(), '\r'), requestLine.end());
+
+  stringstream requestStream;
+  requestStream << requestLine;
 
   // smatch match;
   // regex requestRegex("^(.*) (.*) (.*) \\[(.*)\\/(.*)\\/(.*):(.*):(.*):(.*) (.*)\\] \"(.*) (.*) (.*)\" (.*) (.*) \"(.*)\" \"(.*)\"$");
   // regex_match(requestLine, match, requestRegex);
 
-  // // Si on n'a pas matché suffisamment d'éléments, la ligne n'est pas valide donc on passe à la suivante
-  // if (match.size() != 18) 
-  //   return GetNextRequest(requestPointer);
-
   RequestParameters params;
   string tmp;
-  getline(fileStream, tmp, ' ');
+  bool invalidRequest = false;
+
+  getline(requestStream, tmp, ' ');
   params.adressIP = tmp;
 
-  getline(fileStream, tmp, ' ');
+  getline(requestStream, tmp, ' ');
   params.userLogname = tmp;
 
-  getline(fileStream, tmp, ' ');
+  getline(requestStream, tmp, ' ');
   params.authenticatedUser = tmp;
 
-  fileStream.ignore();
-  getline(fileStream, tmp, '/');
-  params.date.day = (isInt(tmp) ? stoi(tmp) : -1);
+  if (requestStream.peek() == '[') {
+    requestStream.ignore();
+    getline(requestStream, tmp, '/');
+    params.date.day = (isInt(tmp) ? stoi(tmp) : -1);
+  }
+  else {
+    invalidRequest = true;
+  }
 
-  getline(fileStream, tmp, '/');
+
+  getline(requestStream, tmp, '/');
   params.date.month = tmp;
 
-  getline(fileStream, tmp, ':');
+  getline(requestStream, tmp, ':');
   params.date.year = (isInt(tmp) ? stoi(tmp) : -1);
 
-  getline(fileStream, tmp, ':');
+  getline(requestStream, tmp, ':');
   params.date.hour = (isInt(tmp) ? stoi(tmp) : -1);
 
-  getline(fileStream, tmp, ':');
+  getline(requestStream, tmp, ':');
   params.date.minute = (isInt(tmp) ? stoi(tmp) : -1);
 
-  getline(fileStream, tmp, ' ');
+  getline(requestStream, tmp, ' ');
   params.date.second = (isInt(tmp) ? stoi(tmp) : -1);
 
-  getline(fileStream, tmp, ']');
+  getline(requestStream, tmp, ']');
   params.date.timezone = tmp;
 
-  fileStream.ignore(2);
-  getline(fileStream, tmp, ' ');
-  params.type = tmp;
+  if (requestStream.peek() == ' ') {
+    requestStream.ignore();
+    if (requestStream.peek() == '"') {
+      requestStream.ignore();
+      getline(requestStream, tmp, ' ');
+      params.type = tmp;
+    }
+    else {
+      invalidRequest = true;
+    }
+  } 
+  else {
+    invalidRequest = true;
+  }
 
-  getline(fileStream, tmp, ' ');
+  getline(requestStream, tmp, ' ');
   params.target = tmp;
 
-  getline(fileStream, tmp, '"');
+  getline(requestStream, tmp, '"');
   params.protocol = tmp;
 
-  fileStream.ignore();
-  getline(fileStream, tmp, ' ');
-  params.statusCode = (isInt(tmp) ? stoi(tmp) : -1);
+  if (requestStream.peek() == ' ') {
+    requestStream.ignore();
+    getline(requestStream, tmp, ' ');
+    params.statusCode = (isInt(tmp) ? stoi(tmp) : -1);
+  }
+  else {
+    invalidRequest = true;
+  }
 
-  getline(fileStream, tmp, ' ');
+  getline(requestStream, tmp, ' ');
   params.size = (isInt(tmp) ? stoi(tmp) : -1);
 
-  // if (tmp.substr(0, baseURL.length()) == baseURL)
-  // {
-  //     tmp = tmp.substr(baseURL.length());
-  // }
+  if (requestStream.peek() == '"') {
+    requestStream.ignore();
+    getline(requestStream, tmp, '"');
+    params.referer = tmp;
+  }
+  else {
+    invalidRequest = true;
+  }
+  
+  if (requestStream.peek() == ' ') {
+    requestStream.ignore();
+    if (requestStream.peek() == '"') {
+      requestStream.ignore();
+      getline(requestStream, tmp, '"');
+      params.userAgent = tmp;
+    }
+    else {
+      invalidRequest = true;
+    }
+  }
+  else {
+    invalidRequest = true;
+  }
 
-  fileStream.ignore();
-  getline(fileStream, tmp, '"');
-  params.referer = tmp;
+  getline(requestStream, tmp, '\n');
+  string endLine = "";
+  for (int i = 0; i < (int)tmp.length(); i++) {
+    if (isprint(tmp[i]) && !isblank(tmp[i]))
+      endLine += tmp[i];
+  }
+  if (endLine.length() > 0)
+    invalidRequest = true;
+  
+  // Si la requête est invalide, on passe à la suivante
+  if (invalidRequest)
+    GetNextRequest(requestPointer);
 
-  fileStream.ignore(2);
-  getline(fileStream, tmp, '"');
-  params.userAgent = tmp;
-
-  getline(fileStream, tmp, '\n');
-  cout << "Restant : " << tmp.length() << endl;
 
   // On renvoie true avec la requête
   *requestPointer = new Request(params);
+  //cout << **requestPointer << endl;
 
   return true;
 }

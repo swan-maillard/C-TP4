@@ -33,6 +33,8 @@ struct Flags {
   int hour;
 };
 
+const string BASE_URL = "http://intranet-if.insa-lyon.fr";
+
 
 LinksList parse(const string & logFile, const Flags & flags);
 
@@ -88,7 +90,7 @@ int main(int argc, char * argv[]) {
 
 
   LinksList links = parse(logFile, flags);
-  LogAnalyser::DisplayTopPages(links);
+  //LogAnalyser::Display(links);
 
   return EXIT_SUCCESS;
 }
@@ -101,17 +103,38 @@ LinksList parse(const string & logFile, const Flags & flags) {
 
   // On extrait les requêtes et on enregistre les liens qui vérifient les différents flags
   Request * request = NULL;
-  while (parser.GetNextRequest(&request)) {
+  int i = 0;
+  regex assetsRegex = regex(".*\\.(?:jpe?g|JPE?G|png|PNG|gif|GIF|svg|SVG|webp|WEBP|bmp|BMP|ico|ICO|js|JS|css|CSS)\\/?$");
+  while (parser.GetNextRequest(&request) && i < 100) {
 
     bool checkStatusCodeSuccess = (request->GetStatusCode() >= 200 && request->GetStatusCode() < 300);
-    bool checkFlagIgnoreAssets = (!flags.ignoreAssets || !regex_match(request->GetTarget(), regex(".*\\.(?:jpe?g|JPE?G|png|PNG|gif|GIF|svg|SVG|webp|WEBP|bmp|BMP|ico|ICO|js|JS|css|CSS)\\/?$")));
+    bool checkFlagIgnoreAssets = (!flags.ignoreAssets || !regex_match(request->GetTarget(), assetsRegex));
     bool checkFlagTimespan = (!flags.timespan || flags.hour == request->GetDate().hour);
 
     if (checkStatusCodeSuccess && checkFlagIgnoreAssets && checkFlagTimespan) {
-      links.AddLink(request->GetReferer(), request->GetTarget());
+      string referer = request->GetReferer();
+      string target = request->GetTarget();
+
+      if (referer.substr(0, BASE_URL.length()) == BASE_URL)
+        referer.erase(0, BASE_URL.length());
+
+      int posURLArgs = referer.find("?");
+      if (posURLArgs)
+        referer = referer.substr(0, posURLArgs);
+
+      if (referer[0] != '/' && referer[0] != '-')
+        referer = '/' + referer;
+      if (target[0] != '/' && referer[0] != '-')
+        target = '/' + target;
+      
+      cout << referer << " -> " << request->GetTarget() << endl;
+
+      links.AddLink(referer, request->GetTarget());
     }
 
     delete request;
+
+    i++;
   }
 
   return links;
