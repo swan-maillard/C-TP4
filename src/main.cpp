@@ -89,8 +89,10 @@ int main(int argc, char * argv[]) {
 
 
   LinksList links = parse(logFile, flags);
-  //LogAnalyser::Display(links);
-  LogAnalyser::generateDotFile(flags.dotFile, links);
+  LogAnalyser::Display(links);
+
+  if (flags.generateDotFile)
+    LogAnalyser::generateDotFile(flags.dotFile, links);
 
   return EXIT_SUCCESS;
 }
@@ -103,9 +105,8 @@ LinksList parse(const string & logFile, const Flags & flags) {
 
   // On extrait les requêtes et on enregistre les liens qui vérifient les différents flags
   Request * request = NULL;
-  int i = 0;
   regex assetsRegex = regex(".*\\.(?:jpe?g|JPE?G|png|PNG|gif|GIF|svg|SVG|webp|WEBP|bmp|BMP|ico|ICO|js|JS|css|CSS)\\/?$");
-  while (parser.GetNextRequest(&request) && i < 100) {
+  while (parser.GetNextRequest(&request)) {
 
     bool checkStatusCodeSuccess = (request->GetStatusCode() >= 200 && request->GetStatusCode() < 300);
     bool checkFlagIgnoreAssets = (!flags.ignoreAssets || !regex_match(request->GetTarget(), assetsRegex));
@@ -126,15 +127,11 @@ LinksList parse(const string & logFile, const Flags & flags) {
         referer = '/' + referer;
       if (target[0] != '/' && referer[0] != '-')
         target = '/' + target;
-      
-      cout << referer << " -> " << request->GetTarget() << endl;
 
       links.AddLink(referer, request->GetTarget());
     }
 
     delete request;
-
-    i++;
   }
 
   return links;
