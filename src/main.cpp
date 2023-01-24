@@ -66,7 +66,6 @@ int main(int argc, char * argv[]) {
         cerr << "Il faut préciser une heure après le flag -t" << endl;
         return EXIT_FAILURE;
       }
-      
       int hour = stoi(argv[++i]);
       if (hour < 0 || hour > 23) {
         cerr << hour << " n'est pas une heure valide" << endl;

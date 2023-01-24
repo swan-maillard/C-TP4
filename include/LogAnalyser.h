@@ -16,9 +16,13 @@
 using namespace std;
 #include <string>
 #include <unordered_map>
+#include <iostream>
+#include <fstream>
 
 //-------------------------------------------------------- Include personnel
 #include "../include/LinksList.h"
+
+typedef unordered_map<string, int> NodeRef;
 
 class LogAnalyser {
 
@@ -30,7 +34,7 @@ class LogAnalyser {
 
     static void DisplayTopPages(const LinksList & links);
 
-    static void generateDotFile();
+    static void generateDotFile(const ifstream &file, const LinksList &links);
 
 
 //----------------------------------------------------------------- PRIVE

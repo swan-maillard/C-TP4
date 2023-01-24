@@ -51,7 +51,7 @@ void LinksList::AddLink(const string & referer, const string & target) {
     // S'il y a déjà un lien, on incrémente le nombre de liens, sinonon ajoute le nouveau lien
     if (searchLink != link.end())
       searchLink->second++;
-    else 
+    else
       link.insert(LinkPair(referer, 1));
 
     // On update la liste des liens pour la cible
