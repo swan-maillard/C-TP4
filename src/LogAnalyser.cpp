@@ -98,6 +98,9 @@ void LogAnalyser::generateDotFile(const string &file, const LinksList &links){
     dotcontent+=noeud;
   }
 
+  //A FAIRE : (problème : quand un noeud est referer mais jamais target, il n'apparaît pas)-> Parcourir les referers.
+  //s'ils ne sont pas dans la Noderefpair (liste des noeuds recensés), les rajouter
+
   for (const LinksListPair & linksListPair : links.GetList()) {
       int numnoeud;
 
