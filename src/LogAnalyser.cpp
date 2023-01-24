@@ -68,7 +68,7 @@ void LogAnalyser::DisplayTopPages(const LinksList & links) {
 
   // On affiche le top pages consultées
   for (const pair<int, string> & pagePair : topPages)
-    cout << pagePair.first << " (" << pagePair.second << " hits)" << endl;
+    cout << pagePair.second << " (" << pagePair.first << " hits)" << endl;
 
 }
 

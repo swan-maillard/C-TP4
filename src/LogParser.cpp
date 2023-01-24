@@ -50,45 +50,88 @@ LogParser::~LogParser() {
 bool LogParser::GetNextRequest(Request ** requestPointer) {
   string requestLine;
 
-  // On récupère la prochaine requête jusqu'à arriver à la fin du fichier
-  if (!getline(fileStream, requestLine))
+  if (fileStream.peek() == EOF)
     return false;
 
   // On enlève les retour chariots s'il y en a
-  requestLine.erase(remove(requestLine.begin(), requestLine.end(), '\r'), requestLine.end());
+  //requestLine.erase(remove(requestLine.begin(), requestLine.end(), '\r'), requestLine.end());
 
-  smatch match;
-  regex requestRegex("^(.*) (.*) (.*) \\[(.*)\\/(.*)\\/(.*):(.*):(.*):(.*) (.*)\\] \"(.*) (.*) (.*)\" (.*) (.*) \"(.*)\" \"(.*)\"$");
-  regex_match(requestLine, match, requestRegex);
+  // smatch match;
+  // regex requestRegex("^(.*) (.*) (.*) \\[(.*)\\/(.*)\\/(.*):(.*):(.*):(.*) (.*)\\] \"(.*) (.*) (.*)\" (.*) (.*) \"(.*)\" \"(.*)\"$");
+  // regex_match(requestLine, match, requestRegex);
 
-  // Si on n'a pas matché suffisamment d'éléments, la ligne n'est pas valide donc on passe à la suivante
-  if (match.size() != 18) 
-    return GetNextRequest(requestPointer);
+  // // Si on n'a pas matché suffisamment d'éléments, la ligne n'est pas valide donc on passe à la suivante
+  // if (match.size() != 18) 
+  //   return GetNextRequest(requestPointer);
 
   RequestParameters params;
-  params.adressIP = match[1];
-  params.userLogname = match[2];
-  params.authenticatedUser = match[3];
+  string tmp;
+  getline(fileStream, tmp, ' ');
+  params.adressIP = tmp;
 
-  DateTime date;
-  date.day = (isInt(match[4]) ? stoi(match[4]) : -1);
-  date.month = match[5];
-  date.year = (isInt(match[6]) ? stoi(match[6]) : -1);
-  date.hour = (isInt(match[7]) ? stoi(match[7]) : -1);
-  date.minute = (isInt(match[8]) ? stoi(match[8]) : -1);
-  date.second = (isInt(match[4]) ? stoi(match[4]) : -1);
-  date.timezone = match[10];
+  getline(fileStream, tmp, ' ');
+  params.userLogname = tmp;
 
-  params.date = date;
-  params.type = match[11];
-  params.target = match[12];
-  params.protocol = match[13];
-  params.statusCode = (isInt(match[14]) ? stoi(match[14]) : -1);
-  params.size = (isInt(match[15]) ? stoi(match[15]) : -1);
-  params.referer = match[16];
-  params.userAgent = match[17];
+  getline(fileStream, tmp, ' ');
+  params.authenticatedUser = tmp;
+
+  fileStream.ignore();
+  getline(fileStream, tmp, '/');
+  params.date.day = (isInt(tmp) ? stoi(tmp) : -1);
+
+  getline(fileStream, tmp, '/');
+  params.date.month = tmp;
+
+  getline(fileStream, tmp, ':');
+  params.date.year = (isInt(tmp) ? stoi(tmp) : -1);
+
+  getline(fileStream, tmp, ':');
+  params.date.hour = (isInt(tmp) ? stoi(tmp) : -1);
+
+  getline(fileStream, tmp, ':');
+  params.date.minute = (isInt(tmp) ? stoi(tmp) : -1);
+
+  getline(fileStream, tmp, ' ');
+  params.date.second = (isInt(tmp) ? stoi(tmp) : -1);
+
+  getline(fileStream, tmp, ']');
+  params.date.timezone = tmp;
+
+  fileStream.ignore(2);
+  getline(fileStream, tmp, ' ');
+  params.type = tmp;
+
+  getline(fileStream, tmp, ' ');
+  params.target = tmp;
+
+  getline(fileStream, tmp, '"');
+  params.protocol = tmp;
+
+  fileStream.ignore();
+  getline(fileStream, tmp, ' ');
+  params.statusCode = (isInt(tmp) ? stoi(tmp) : -1);
+
+  getline(fileStream, tmp, ' ');
+  params.size = (isInt(tmp) ? stoi(tmp) : -1);
+
+  // if (tmp.substr(0, baseURL.length()) == baseURL)
+  // {
+  //     tmp = tmp.substr(baseURL.length());
+  // }
+
+  fileStream.ignore();
+  getline(fileStream, tmp, '"');
+  params.referer = tmp;
+
+  fileStream.ignore(2);
+  getline(fileStream, tmp, '"');
+  params.userAgent = tmp;
+
+  getline(fileStream, tmp, '\n');
+  cout << "Restant : " << tmp.length() << endl;
 
   // On renvoie true avec la requête
   *requestPointer = new Request(params);
+
   return true;
 }

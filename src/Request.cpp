@@ -47,3 +47,19 @@ Request::~Request() {
       cout << "Destruction de <Request>" << endl;
   #endif
 }
+
+ostream & operator << (ostream & out, const Request & request) {
+  out << request.adressIP << endl;
+  out << request.userLogname << endl;
+  out << request.authenticatedUser << endl;
+  out << request.date.day << "/" << request.date.month << "/" << request.date.year << " " << request.date.hour << ":" << request.date.minute << ":" << request.date.second << endl;
+  out << request.type << endl;
+  out << request.target << endl;
+  out << request.protocol << endl;
+  out << request.statusCode << endl;
+  out << request.size << endl;
+  out << request.referer << endl;
+  out << request.userAgent << endl;
+
+  return out;
+}

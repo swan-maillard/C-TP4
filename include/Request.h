@@ -15,6 +15,7 @@
 //-------------------------------------------------------- Include système
 using namespace std;
 #include <string>
+#include <ostream>
 
 //-------------------------------------------------------- Include personnel
 
@@ -47,6 +48,8 @@ class Request {
 //----------------------------------------------------------------- PUBLIC
   public:
 //----------------------------------------------------- Méthodes publiques
+
+    friend ostream & operator << (ostream & out, const Request & request);
 
     // Constructeur
     Request(const RequestParameters & params);
