@@ -89,7 +89,7 @@ int main(int argc, char * argv[]) {
 
 
   LinksList links = parse(logFile, flags);
-  LogAnalyser::Display(links);
+  LogAnalyser::DisplayTopPages(links);
 
   if (flags.generateDotFile)
     LogAnalyser::generateDotFile(flags.dotFile, links);
