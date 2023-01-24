@@ -34,7 +34,7 @@ class LogAnalyser {
 
     static void DisplayTopPages(const LinksList & links);
 
-    static void generateDotFile(const ifstream &file, const LinksList &links);
+    static void generateDotFile(const string &file, const LinksList &links);
 
 
 //----------------------------------------------------------------- PRIVE

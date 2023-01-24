@@ -74,11 +74,12 @@ void LogAnalyser::DisplayTopPages(const LinksList & links) {
 
 }
 
-void LogAnalyser::generateDotFile(const ifstream &file, const LinksList &links){
+void LogAnalyser::generateDotFile(const string &file, const LinksList &links){
   //file en param juste pr test
   #ifdef MAP
     cout << "Exécution de generateDotFile de <LogAnalyser>" << endl;
   #endif
+
   string dotcontent="digraph {\n";
   LinksListMap::iterator parcours;
   string target;
@@ -89,42 +90,39 @@ void LogAnalyser::generateDotFile(const ifstream &file, const LinksList &links){
 
   // pour parcourir toutes les paires de la map
   for (const LinksListPair & linksListPair : links.GetList()) {
-      string noeud="";
-      target = linksListPair.first;
-      noeud="node"+to_string(i)+ " [label=\"" + target + "\"];\n";
-      Noderefpair.insert(make_pair(target, i));
-      i++;
-      dotcontent+=noeud;
-    }
-    for (const LinksListPair & linksListPair : links.GetList()) {
-            int numnoeud;
-              for(const LinkPair & linkPair: linksListPair.second){
-                string referer = linkPair.first;
-                string base = "http://intranet-if.insa-lyon.fr";
-                int basePos = referer.find(base);
-                if (basePos >= 0) {
-                  referer.erase(basePos, base.length());
-                }
+    string noeud="";
+    target = linksListPair.first;
+    noeud="\tnode"+to_string(i)+ " [label=\"" + target + "\"];\n";
+    Noderefpair.insert(make_pair(target, i));
+    i++;
+    dotcontent+=noeud;
+  }
 
-                NodeRef::iterator node = Noderefpair.find(referer);
+  for (const LinksListPair & linksListPair : links.GetList()) {
+      int numnoeud;
 
-                if(node!=Noderefpair.end()){
-                  numnoeud = node->second;
-                  relations+="node"+ to_string(numnoeud) + "-> node"+to_string(j);
+      for(const LinkPair & linkPair: linksListPair.second){
+        NodeRef::iterator node = Noderefpair.find(linkPair.first);
 
-                  int nbrelations=linkPair.second;
-                  relations+=" [label=\""+to_string(nbrelations)+"\"];\n";
-                }
+        if(node!=Noderefpair.end()) {
+          numnoeud = node->second;
+          relations+="\tnode"+ to_string(numnoeud) + " -> node"+to_string(j);
+
+          int nbrelations=linkPair.second;
+          relations+=" [label=\""+to_string(nbrelations)+"\"];\n";
+        }
       }
-      j++;
-    }
+
+    j++;
+  }
 
   dotcontent+=relations;
   dotcontent+="}";
-  ofstream { "court.dot" };
+
   ofstream fichierdot;
-  fichierdot.open("court.dot");
-  fichierdot<<dotcontent;
+  fichierdot.open(file, fstream::out);
+
+  fichierdot << dotcontent;
   //cout<<dotcontent;
 
 }

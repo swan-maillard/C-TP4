@@ -90,6 +90,7 @@ int main(int argc, char * argv[]) {
 
   LinksList links = parse(logFile, flags);
   //LogAnalyser::Display(links);
+  LogAnalyser::generateDotFile(flags.dotFile, links);
 
   return EXIT_SUCCESS;
 }
