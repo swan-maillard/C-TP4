@@ -1,1 +1,1 @@
-cat 
+./analog -t 12 -g court.dot test1.log
