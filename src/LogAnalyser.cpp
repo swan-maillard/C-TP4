@@ -97,19 +97,39 @@ void LogAnalyser::generateDotFile(const string &file, const LinksList &links){
     dotcontent+=noeud;
   }
 
-  //A FAIRE : (problème : quand un noeud est referer mais jamais target, il n'apparaît pas)-> Parcourir les referers.
-  //s'ils ne sont pas dans la Noderefpair (liste des noeuds recensés), les rajouter
+//rajoute le noeud dans la liste des noeuds quand il est referer mais jamais target (donc pas encore dans la liste)
+  for (const LinksListPair & linksListPair : links.GetList()) {
+    string noeud="";
+    LinkMap second;
+    string referer="";
+    int present=0;
+
+    for (const LinkPair & linkPair: linksListPair.second) { //pour chaque referer, on vérifie s'il est déjà présent dans le noeud de ref.
+      for(const NodePair & refpair : Noderefpair){
+        referer=linkPair.first;
+        if(referer==refpair.first){
+          present=1;
+          break;
+        }
+      }
+      if(present==0){
+        Noderefpair.insert(make_pair(referer, i));
+        noeud="\tnode"+to_string(i)+ " [label=\"" + referer + "\"];\n";
+        dotcontent+=noeud;
+        i++;
+      }
+      present=0;
+    }
+  }
 
   for (const LinksListPair & linksListPair : links.GetList()) {
       int numnoeud;
 
-      for(const LinkPair & linkPair: linksListPair.second){
-        NodeRef::iterator node = Noderefpair.find(linkPair.first);
-
+      for(const LinkPair & linkPair: linksListPair.second){ //on parcourt la linkmap
+        NodeRef::iterator node = Noderefpair.find(linkPair.first); //on trouve le noeud correspondant au referer de la paire de la linkmap
+        numnoeud = node->second;
         if(node!=Noderefpair.end()) {
-          numnoeud = node->second;
           relations+="\tnode"+ to_string(numnoeud) + " -> node"+to_string(j);
-
           int nbrelations=linkPair.second;
           relations+=" [label=\""+to_string(nbrelations)+"\"];\n";
         }
@@ -123,8 +143,5 @@ void LogAnalyser::generateDotFile(const string &file, const LinksList &links){
 
   ofstream fichierdot;
   fichierdot.open("out/" + file, fstream::out);
-
   fichierdot << dotcontent;
-  //cout<<dotcontent;
-
 }

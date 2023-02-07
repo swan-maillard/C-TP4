@@ -22,7 +22,8 @@ using namespace std;
 //-------------------------------------------------------- Include personnel
 #include "../include/LinksList.h"
 
-typedef unordered_map<string, int> NodeRef;
+typedef unordered_map<string, int> NodeRef; //le string correspond au nom de la page, int : numéro du noeud
+typedef pair<string, int> NodePair;
 
 class LogAnalyser {
 
