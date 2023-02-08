@@ -1,1 +1,1 @@
-../../analog -t 12 -g court.dot ../../test1.log
+../../analog -t 12 -g test.dot ../../test1.log

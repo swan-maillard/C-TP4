@@ -33,11 +33,11 @@ LogParser::LogParser(const string & logFile) {
       cout << "Construction de <LogParser>" << endl;
   #endif
 
-  fileStream.open("resources/" + logFile, fstream::in);
+  fileStream.open(logFile, fstream::in);
 
   if (!fileStream) {
     cerr << "Le fichier '" << logFile << "' est introuvable." << endl;
-    exit(EXIT_FAILURE); 
+    exit(EXIT_FAILURE);
   }
 
 }
@@ -115,7 +115,7 @@ bool LogParser::GetNextRequest(Request ** requestPointer) {
     else {
       invalidRequest = true;
     }
-  } 
+  }
   else {
     invalidRequest = true;
   }
@@ -146,7 +146,7 @@ bool LogParser::GetNextRequest(Request ** requestPointer) {
   else {
     invalidRequest = true;
   }
-  
+
   if (requestStream.peek() == ' ') {
     requestStream.ignore();
     if (requestStream.peek() == '"') {
@@ -170,7 +170,7 @@ bool LogParser::GetNextRequest(Request ** requestPointer) {
   }
   if (endLine.length() > 0)
     invalidRequest = true;
-  
+
   // Si la requête est invalide, on passe à la suivante
   if (invalidRequest)
     GetNextRequest(requestPointer);

@@ -1,1 +1,1 @@
-./exe
+../../analog -e -t 12 ../../test1.log

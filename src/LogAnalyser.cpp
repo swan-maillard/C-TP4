@@ -139,9 +139,9 @@ void LogAnalyser::generateDotFile(const string &file, const LinksList &links){
   }
 
   dotcontent+=relations;
-  dotcontent+="}";
+  dotcontent+="}\n";
 
   ofstream fichierdot;
-  fichierdot.open("out/" + file, fstream::out);
+  fichierdot.open(file, fstream::out);
   fichierdot << dotcontent;
 }
