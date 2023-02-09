@@ -17,8 +17,6 @@ using namespace std;
 #include <unordered_map>
 #include <string>
 
-//-------------------------------------------------------- Include personnel
-
 typedef unordered_map<string, int> LinkMap;
 typedef unordered_map<string, LinkMap> LinksListMap;  
 
@@ -37,8 +35,12 @@ class LinksList {
     // Destructeur
     ~LinksList();
 
+    // Ajoute un lien Referer-Cible dans la liste
+    // referer : page referer
+    // target : page cible
     void AddLink(const string & referer, const string & target);
 
+    // Renvoie la liste de liens
     LinksListMap GetList() const;
 
 //----------------------------------------------------------------- PRIVE

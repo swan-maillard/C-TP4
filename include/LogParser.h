@@ -33,12 +33,16 @@ class LogParser {
     // Destructeur
     ~LogParser();
 
-    bool GetNextRequest(Request ** request);
+    // Extrait la requête suivante
+    // requestPointer : Pointeur de pointeur qui stockera l'adresse de la requête extraite
+    // return bool : false si toutes les requêtes ont été extraites
+    bool GetNextRequest(Request ** requestPointer);
 
 //----------------------------------------------------------------- PRIVE
   protected:
 //----------------------------------------------------- Attributs protégés
 
+  // Fichier de log à extraire
   ifstream fileStream;
 
 };

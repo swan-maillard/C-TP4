@@ -29,17 +29,7 @@ Request::Request(const RequestParameters & params) {
       cout << "Construction de <Request>" << endl;
   #endif
 
-  this->adressIP = params.adressIP;
-  this->userLogname = params.userLogname;
-  this->authenticatedUser = params.authenticatedUser;
-  this->date = params.date;
-  this->type = params.type;
-  this->target = params.target;
-  this->protocol = params.protocol;
-  this->statusCode = params.statusCode;
-  this->size = params.size;
-  this->referer = params.referer;
-  this->userAgent = params.userAgent;
+  this->params = params;
 }
 
 Request::~Request() {
@@ -48,12 +38,14 @@ Request::~Request() {
   #endif
 }
 
+// Affichage de la requête sur une ligne
 ostream & operator << (ostream & out, const Request & request) {
-  out << request.adressIP << " " << request.userLogname << request.authenticatedUser;
-  out << " [" << request.date.day << "/" << request.date.month << "/" << request.date.year << ":" << request.date.hour << ":" << request.date.minute << ":" << request.date.second << " " << request.date.timezone << "]" << endl;
-  out << " \"" << request.type << " " << request.target << " " << request.protocol << "\"";
-  out << " " << request.statusCode << " " << request.size;
-  out << " \"" << request.referer << "\" \"" << request.userAgent << "\"";
+  RequestParameters req = request.params;
+  out << req.adressIP << " " << req.userLogname << req.authenticatedUser;
+  out << " [" << req.date.day << "/" << req.date.month << "/" << req.date.year << ":" << req.date.hour << ":" << req.date.minute << ":" << req.date.second << " " << req.date.timezone << "]" << endl;
+  out << " \"" << req.type << " " << req.target << " " << req.protocol << "\"";
+  out << " " << req.statusCode << " " << req.size;
+  out << " \"" << req.referer << "\" \"" << req.userAgent << "\"";
   out << endl;
 
   return out;

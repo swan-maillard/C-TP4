@@ -16,14 +16,13 @@
 using namespace std;
 #include <string>
 #include <unordered_map>
-#include <iostream>
-#include <fstream>
 
 //-------------------------------------------------------- Include personnel
 #include "../include/LinksList.h"
 
-typedef unordered_map<string, int> NodeRef; //le string correspond au nom de la page, int : numéro du noeud
-typedef pair<string, int> NodePair;
+// Map contenant la paire <nom de la page, id de la page> 
+typedef unordered_map<string, int> PagesName;
+typedef pair<string, int> PagesNamePair;
 
 class LogAnalyser {
 
@@ -31,11 +30,14 @@ class LogAnalyser {
   public:
 //----------------------------------------------------- Méthodes publiques
 
-    static void Display(const LinksList & links);
-
+    // Méthode statique affichant les 10 pages les plus consultées
+    // links : Liste de liens entre les pages
     static void DisplayTopPages(const LinksList & links);
 
-    static void generateDotFile(const string &file, const LinksList &links);
+    // Méthode statique générant le fichier .dot 
+    // file : Fichier qui sera généré
+    // links : Liste de liens entre les pages
+    static void GenerateDotFile(const string &file, const LinksList &links);
 
 
 //----------------------------------------------------------------- PRIVE

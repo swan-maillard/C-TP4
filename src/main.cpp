@@ -92,7 +92,7 @@ int main(int argc, char * argv[]) {
   LogAnalyser::DisplayTopPages(links);
 
   if (flags.generateDotFile)
-    LogAnalyser::generateDotFile(flags.dotFile, links);
+    LogAnalyser::GenerateDotFile(flags.dotFile, links);
 
   return EXIT_SUCCESS;
 }

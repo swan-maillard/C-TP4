@@ -15,9 +15,7 @@
 //-------------------------------------------------------- Include système
 using namespace std;
 #include <iostream>
-#include <fstream>
 #include <sstream>
-#include <string>
 #include <algorithm>
 
 //------------------------------------------------------ Include personnel
@@ -35,6 +33,7 @@ LogParser::LogParser(const string & logFile) {
 
   fileStream.open(logFile, fstream::in);
 
+  // Si le fichier de log est introuvable on émet un message d'erreur puis on termine l'exécution
   if (!fileStream) {
     cerr << "Le fichier '" << logFile << "' est introuvable." << endl;
     exit(EXIT_FAILURE);
@@ -51,22 +50,29 @@ LogParser::~LogParser() {
 bool LogParser::GetNextRequest(Request ** requestPointer) {
   string requestLine;
 
+  // On récupère la prochaine ligne du fichier
+  // Si on atteint la fin du fichier, on renvoit false
   if (!getline(fileStream, requestLine))
     return false;
 
   // On enlève les retour chariots s'il y en a
   requestLine.erase(remove(requestLine.begin(), requestLine.end(), '\r'), requestLine.end());
 
+  // On convertit la ligne correspondant à la requête en flux afin de faciliter son traitement
   stringstream requestStream;
   requestStream << requestLine;
 
-  // smatch match;
-  // regex requestRegex("^(.*) (.*) (.*) \\[(.*)\\/(.*)\\/(.*):(.*):(.*):(.*) (.*)\\] \"(.*) (.*) (.*)\" (.*) (.*) \"(.*)\" \"(.*)\"$");
-  // regex_match(requestLine, match, requestRegex);
-
+  // Paramètres extraits de la requête
   RequestParameters params;
   string tmp;
+
+  // Passera à true si la requête est syntaxiquement incorrecte
   bool invalidRequest = false;
+
+
+  ////////////////////////////////////////////////////////
+  // DEBUT DE L'EXTRACTION DES PARAMETRES DE LA REQUETE //
+  ////////////////////////////////////////////////////////
 
   getline(requestStream, tmp, ' ');
   params.adressIP = tmp;
@@ -85,7 +91,6 @@ bool LogParser::GetNextRequest(Request ** requestPointer) {
   else {
     invalidRequest = true;
   }
-
 
   getline(requestStream, tmp, '/');
   params.date.month = tmp;
@@ -161,6 +166,10 @@ bool LogParser::GetNextRequest(Request ** requestPointer) {
   else {
     invalidRequest = true;
   }
+
+  //////////////////////////////////////////////////////
+  // FIN DE L'EXTRACTION DES PARAMETRES DE LA REQUETE //
+  //////////////////////////////////////////////////////
 
   getline(requestStream, tmp, '\n');
   string endLine = "";

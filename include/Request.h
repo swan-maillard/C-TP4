@@ -19,6 +19,7 @@ using namespace std;
 
 //-------------------------------------------------------- Include personnel
 
+// Structure définissant une date
 struct DateTime {
   int day;
   string month;
@@ -29,6 +30,7 @@ struct DateTime {
   string timezone;
 };
 
+// Structure définissant les paramètres d'une requête
 struct RequestParameters {
   string adressIP;
   string userLogname;
@@ -49,41 +51,34 @@ class Request {
   public:
 //----------------------------------------------------- Méthodes publiques
 
+    // Surcharge de l'opérateur <<
     friend ostream & operator << (ostream & out, const Request & request);
 
     // Constructeur
+    // params : paramètres de la requête
     Request(const RequestParameters & params);
 
     // Destructeur
     ~Request();
 
     // Getters
-    string GetAdressIP() { return adressIP; }
-    string GetUserLogname() { return userLogname; }
-    string GetAuthenticatedUser() { return authenticatedUser; }
-    DateTime GetDate() { return date; }
-    string GetType() { return type; }
-    string GetTarget() { return target; }
-    string GetProtocol() { return protocol; }
-    int GetStatusCode() { return statusCode; }
-    int GetSize() { return size; }
-    string GetReferer() { return referer; }
-    string GetUserAgent() { return userAgent; }
+    // On les a déclarer dans le fichier d'en-tête car elles ne sont composées que d'une ligne
+    string GetAdressIP() { return params.adressIP; }
+    string GetUserLogname() { return params.userLogname; }
+    string GetAuthenticatedUser() { return params.authenticatedUser; }
+    DateTime GetDate() { return params.date; }
+    string GetType() { return params.type; }
+    string GetTarget() { return params.target; }
+    string GetProtocol() { return params.protocol; }
+    int GetStatusCode() { return params.statusCode; }
+    int GetSize() { return params.size; }
+    string GetReferer() { return params.referer; }
+    string GetUserAgent() { return params.userAgent; }
 
 //----------------------------------------------------------------- PRIVE
   protected:
 //----------------------------------------------------- Attributs protégés
-    string adressIP;
-    string userLogname;
-    string authenticatedUser;
-    DateTime date;
-    string type;
-    string target;
-    string protocol;
-    int statusCode;
-    int size;
-    string referer;
-    string userAgent;
+    RequestParameters params;
 };
 
 #endif // REQUEST_H
