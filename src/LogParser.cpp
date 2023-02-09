@@ -171,6 +171,7 @@ bool LogParser::GetNextRequest(Request ** requestPointer) {
   // FIN DE L'EXTRACTION DES PARAMETRES DE LA REQUETE //
   //////////////////////////////////////////////////////
 
+  // On vérifie qu'il ne reste aucun caractère sur la ligne (exepté des espaces ou des caractères non-affichables)
   getline(requestStream, tmp, '\n');
   string endLine = "";
   for (int i = 0; i < (int)tmp.length(); i++) {
@@ -187,7 +188,5 @@ bool LogParser::GetNextRequest(Request ** requestPointer) {
 
   // On renvoie true avec la requête
   *requestPointer = new Request(params);
-  //cout << **requestPointer << endl;
-
   return true;
 }
