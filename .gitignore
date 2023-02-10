@@ -3,5 +3,4 @@
 bin/
 analog
 resultats.csv
-out/*
 *.png
