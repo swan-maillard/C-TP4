@@ -117,10 +117,10 @@ fi
 
 # compare files created if concerned
 resultFiles=2
-if ls *../../outfile &> /dev/null
+if ls *outfile &> /dev/null
 then
   number=1
-  for i in *../../outfile
+  for i in *outfile
   do
     fileName=`basename $i .outfile`
     if [ -r $fileName ]
@@ -134,7 +134,7 @@ then
         resultFiles=0
         resultGlobal=0
       fi
-      #rm $fileName
+      rm $fileName
     else
       echo "                                       File #$number     : FAILED"
       resultFiles=0

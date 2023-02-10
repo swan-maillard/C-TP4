@@ -1,1 +1,2 @@
-Ce test permet de vérifier que l'on doit rentrer une heure valide pour que le code s'exécute normalement.
+Ce test exécute le programme sans option, dont les requêtes ont des codes de statut variants entre 100 et 500.
+Seules les pages ayant un code compris entre [200 ; 300[ doivent être affichées.

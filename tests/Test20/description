@@ -1,0 +1,2 @@
+Ce test exécute le programme avec l'option inexistante -f.
+Une erreur devrait être lancée.

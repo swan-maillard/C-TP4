@@ -1,1 +1,3 @@
-Ce test permet de vérifier que lors de l'exécution, ce sont bien les 10 documents les plus consultés qui s'affichent, et qu'ils sont également bien classés par ordre décroissant.
+Ce test exécute le programme avec l'option -e.
+Teste le retrait des extensions suivantes : 
+jpg, JPG, jpeg, JPEG, png, PNG, gif, GIF, svg, SVG, wepbp, WEBP, bmp, BMP, ico, ICO, js, JS, css, CSS

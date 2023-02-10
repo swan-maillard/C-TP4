@@ -1,1 +1,2 @@
-Ce test permet de vérifier que les options sur l'heure et celle excluant les documents image, css ou javascript fonctionnent bien ensemble.
+Ce test exécute le programme avec un fichier log contenant des requêtes incorrectes.
+Aucune page ne doit être affichée.

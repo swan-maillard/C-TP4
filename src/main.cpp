@@ -1,7 +1,6 @@
 /*************************************************************************
-    OUI.SNC++ : Vos trajets n'ont jamais été aussi simples !
-
-    Fichier principal de l'application, gère l'affichage des différents menus.
+    Extracteur de requêtes dans un fichier de log et analyseur des liens entres
+    les différentes pages
                              -------------------
     début                : 13/12/2022
     copyright            : (C) 2022 par MALARD Sarah & MAILLARD Swan
@@ -46,7 +45,7 @@ const string getBaseURL();
 int main(int argc, char * argv[]) {
 
   // S'il n'y a qu'un seul argument : erreur
-  if (argc == 1) {
+  if (argc == 1 || argv[argc - 1][0] == '-') {
     cerr << "Vous devez préciser le nom du fichier de log." << endl;
     return EXIT_FAILURE;
   }
@@ -59,7 +58,7 @@ int main(int argc, char * argv[]) {
   for (int i = 1; i < argc-1; i++) {
     string arg = string(argv[i]);
     if (arg == "-g") {
-      if (i > argc-1) {
+      if (i >= argc-2 || argv[i+1][0] == '-') {
         cerr << "Il faut préciser un nom de fichier après le flag -g" << endl;
         return EXIT_FAILURE;
       }
@@ -71,7 +70,7 @@ int main(int argc, char * argv[]) {
       flags.ignoreAssets = true;
     }
     else if (arg == "-t") {
-      if (i > argc-1 || !isInt(argv[i+1])) {
+      if (i >= argc-2 || !isInt(argv[i+1])) {
         cerr << "Il faut préciser une heure après le flag -t" << endl;
         return EXIT_FAILURE;
       }
@@ -142,9 +141,12 @@ LinksList parse(const string & logFile, const Flags & flags) {
         referer.erase(0, BASE_URL.length());
 
       // On retire de l'URL tout ce qu'il y a après "?" inclus
-      int posURLArgs = referer.find("?");
-      if (posURLArgs)
-        referer = referer.substr(0, posURLArgs);
+      int posRefererURLParams = referer.find("?");
+      if (posRefererURLParams)
+        referer = referer.substr(0, posRefererURLParams);
+      int posTargetURLParams = target.find("?");
+      if (posTargetURLParams)
+        target = target.substr(0, posTargetURLParams);
 
       // S'il n'y a pas de / au début de l'URL, on le rajoute
       if (referer[0] != '/' && referer[0] != '-')
@@ -153,7 +155,7 @@ LinksList parse(const string & logFile, const Flags & flags) {
         target = '/' + target;
 
       // On crée le lien entre les pages referer et cible
-      links.AddLink(referer, request->GetTarget());
+      links.AddLink(referer, target);
     }
 
     delete request;

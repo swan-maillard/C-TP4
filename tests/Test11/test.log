@@ -1,0 +1,6 @@
+- - - [0/0/0:0:0:0 +0] "- /page1.html?animal=loutre -" 200 - "/page0.html" "-"
+- - - [0/0/0:0:0:0 +0] "- /page1.html -" 200 - "/page0.html?c=++" "-"
+- - - [0/0/0:0:0:0 +0] "- /page1.html -" 200 - "/page0.html" "-"
+- - - [0/0/0:0:0:0 +0] "- /page2.html?depart=if&classement=1 -" 200 - "/page0.html" "-"
+- - - [0/0/0:0:0:0 +0] "- /page2.html -" 200 - "/page0.html" "-"
+- - - [0/0/0:0:0:0 +0] "- /asset.jpg -" 200 - "/page0.html" "-"

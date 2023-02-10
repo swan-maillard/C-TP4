@@ -1,1 +1,2 @@
-Exécution avec les options -t et -g (avec les hits de 12h à 13h seulement)
+Ce test exécute le programme sans options avec plus de 10 pages cibles.
+Seules 10 pages cibles doivent être affichées.

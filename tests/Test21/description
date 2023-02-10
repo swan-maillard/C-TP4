@@ -1,0 +1,2 @@
+Ce test exécute le programme avec un argument inattendu après l'option -e.
+Une erreur devrait être lancée.

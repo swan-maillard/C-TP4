@@ -1,1 +1,2 @@
-Ce test permet de vérifier que l'on affiche bien une erreur si on choisit un fichier log qui n'existe pas.
+Ce test exécute le programme sans options avec un fichier config précisant la BASE_URL "http://test.fr".
+"http://test.fr" sera supprimé des URL la contenant.

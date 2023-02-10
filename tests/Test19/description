@@ -1,0 +1,3 @@
+Ce test exécute le programme avec l'option -t en précisant une heure non valide.
+L'heure doit être dans l'intervalle [0 ; 24[.
+Une erreur devrait être lancée.

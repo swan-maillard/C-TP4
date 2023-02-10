@@ -1,0 +1,2 @@
+Ce test exécute le programme avec l'option -t sans préciser une heure.
+Une erreur devrait être lancée.

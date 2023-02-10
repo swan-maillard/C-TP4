@@ -1,0 +1,3 @@
+Ce test exécute le programme sans options avec un fichier config précisant la BASE_URL "http://test.fr/".
+La différence avec le test 9 est la présence du "/" à la fin de l'url.
+"http://test.fr" sera supprimé des URL la contenant.

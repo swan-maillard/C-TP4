@@ -1,0 +1,2 @@
+Ce test exécute le programme sans options avec des requêtes dont les url ne commençant par par "/".
+Un "/" doit être ajouté au début des URL, sauf si l'url est "-".

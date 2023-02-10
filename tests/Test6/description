@@ -1,1 +1,1 @@
-Ce test permet de vérifier que les documents avec une extension image, css ou javascript sont bien exclus.
+Ce test exécute le programme avec l'option -g et génère un fichier test.dot.

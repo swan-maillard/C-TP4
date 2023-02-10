@@ -1,0 +1,2 @@
+Ce test exécute le programme avec l'option -g sans préciser de nom pour le fichier dot.
+Une erreur devrait être lancée.

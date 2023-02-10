@@ -1,1 +1,2 @@
-Ce test permet d'exécuter le programme sans option.
+Ce test exécute le programme sans options avec moins de 10 pages cibles.
+Toutes les oages cibles doivent être affichées.

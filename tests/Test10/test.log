@@ -1,0 +1,6 @@
+- - - [0/0/0:0:0:0 +0] "- /page1.html -" 200 - "http://test.fr/page0.html" "-"
+- - - [0/0/0:0:0:0 +0] "- /page1.html -" 200 - "/page0.html" "-"
+- - - [0/0/0:0:0:0 +0] "- /page1.html -" 200 - "/page0.html" "-"
+- - - [0/0/0:0:0:0 +0] "- /page2.html -" 200 - "http://test.fr/page0.html" "-"
+- - - [0/0/0:0:0:0 +0] "- /page2.html -" 200 - "/page0.html" "-"
+- - - [0/0/0:0:0:0 +0] "- /asset.jpg -" 200 - "http://test.fr/page0.html" "-"

@@ -1,1 +1,2 @@
-Ce test permet d'exécuter le code avec l'option -g (création d'un fichier dot)
+Ce test exécute le programme avec l'option -t 10, le fichier contenant des requêtes à 10h.
+Seules les pages dont l'heure est 10h doivent être affichées.

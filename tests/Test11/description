@@ -1,0 +1,2 @@
+Ce test exécute le programme sans options avec des requêtes possédant des paramètres (?param=valeur&...).
+Ces paramètres ne doivent pas être affichés.

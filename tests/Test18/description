@@ -1,0 +1,2 @@
+Ce test exécute le programme avec l'option -t avec un argument qui n'est pas un entier.
+Une erreur devrait être lancée.
