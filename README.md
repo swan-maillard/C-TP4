@@ -1,74 +1,91 @@
-# Manuel d'utilisation
+# Extracteur de requêtes de log et analyseur de liens
 
-## 1. Motivation
----
-Cette application permet d'extraire les requêtes d'un fichier de log, d'afficher les 10 pages les plus consultées et de générer un graphe des liens entre les différentes pages.
+## Description
 
-## 2. Spécification du fichier de log
----
-Chaque ligne du fichier de log doit suivre ce format :
+Ce projet a pour but de faciliter l'analyse des fichiers de log en extrayant les requêtes et en visualisant les liens entre les différentes pages web. Il permet aux utilisateurs de mieux comprendre le comportement de leurs visiteurs et d'optimiser leur site en fonction des résultats.
 
-`ADRESS_IP USER_LOGNAME AUTHENTICATED_USER [J/M/A:H:M:S TIMEZONE] "GET URL_TARGET HTTP_PROTOCOL" STATUS_CODE RESPONSE_SIZE "URL_REFERER" "USER_AGENT"`
+## Format du fichier de log
 
-**Exemple :**
+Pour que l'application puisse fonctionner correctement, chaque ligne du fichier de log doit respecter le format suivant :
 
-`192.168.0.0 - - [10/fev/2023:10:14:31 +0200] "GET /page1.html HTTP/1.1" 200 666 "www.google.fr" "Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko"`
+```
+ADRESS_IP USER_LOGNAME AUTHENTICATED_USER [J/M/A:H:M:S TIMEZONE] "GET URL_TARGET HTTP_PROTOCOL" STATUS_CODE RESPONSE_SIZE "URL_REFERER" "USER_AGENT"
+```
 
-Si ce format exact n'est pas respecté, la requête ne sera pas prise en compte.
+### Exemple :
 
-## 3. Fichier de configuration
----
-Le fichier *config* situé à la racine permet de préciser une adresse locale à ignorer dans les URL des requêtes. Il faut spécifier **`BASE_URL=AdresseLocale`**.
+```
+192.168.0.0 - - [10/fev/2023:10:14:31 +0200] "GET /page1.html HTTP/1.1" 200 666 "www.google.fr" "Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko"
+```
 
-**Exemple :**
-##### **`config`**
+Les lignes ne respectant pas ce format ne seront pas prises en compte par l'application.
+
+## Fichier de configuration
+
+Un fichier nommé *config* doit être présent à la racine du projet. Il permet de définir une adresse locale à ignorer lors de l'analyse des URL. Le format doit être :
+
+```
+BASE_URL=AdresseLocale
+```
+
+### Exemple de contenu du fichier `config` :
+
 ```
 BASE_URL=http://intranet-if.insa-lyon.fr/
 ```
 
-## 4. Compilation
----
-**Commandes à exécuter avec MakeFile :**
+## Instructions de compilation
 
-**$ `make`** pour compiler et faire l'édition des liens.
+Pour compiler le projet, utilisez le Makefile fourni dans le répertoire. Les commandes disponibles sont les suivantes :
 
-**$ `make dev`** pour compiler en mode développement et faire l'édition des liens.
+- **`make`** : compile le projet et effectue l'édition des liens.
+- **`make dev`** : compile le projet en mode développement.
+- **`make fclean`** : supprime les fichiers objets et l'exécutable.
+- **`make help`** : affiche des informations sur les commandes disponibles.
 
-**$ `make fclean`** pour supprimer les fichiers objets et l'éxecutable.
+## Utilisation de l'application
 
-**$ `make help`** pour obtenir plus d'informations sur les commandes disponibles.
+Pour exécuter l'application, utilisez la commande suivante :
 
-## 4. Exécution
----
-**Commandes à exécuter pour lancer l'application :**
+```
+./analog [options] nomfichier.log
+```
 
-**$ `./analog [options] nomfichier.log`**
-> Par défaut, c’est-à-dire quand il n’y a aucune option, il extraira les requêtes du fichier **`monfichier.log`** et  affichera sur la console la liste des 10 documents les plus consultés par ordre décroissant de popularité. Aucun fichier
-`.dot` n’est généré dans ce cas.
+### Fonctionnalités par défaut :
 
-> Si le fichier **`monfichier.log`** n'existe pas, une erreur sera levée.
+Sans options, l'application extrait les requêtes du fichier spécifié (ex. : `monfichier.log`) et affiche sur la console les 10 pages les plus consultées par ordre décroissant. Aucune génération de fichier `.dot` n'a lieu.
 
-**Les différentes [options] sont les suivantes :**
+### Options disponibles :
 
-**[`-g nomfichier.dot`]**
-> Cette option permet de générer le fichier **`nomfichier.dot`** au format *GraphViz*. Il permet d'obtenir un graph des liens entre les différentes pages.
+- **`-g nomfichier.dot`** :
+  - Génère un fichier au format GraphViz nommé `nomfichier.dot`, représentant un graphe des liens entre les différentes pages.
 
-**[`-e`]**
-> Cette option permet d’exclure tous les documents qui ont une extension de type image, css ou
-javascript.
+- **`-e`** :
+  - Exclut les requêtes correspondant à des ressources statiques telles que les images, les fichiers CSS et JavaScript.
+  - Les extensions supportées sont : **jpg, jpeg, png, gif, svg, webp, bmp, ico, js, css** (insensible à la casse).
 
-> Les extensions prises en charge (insensible à la casse) sont : **jpg, jpeg, png, gif, svg, webp, bmp, ico, js et css.**
+- **`-t heure`** :
+  - Filtre les requêtes pour ne garder que celles dans l'intervalle d'une heure donnée (ex. : `[ heure ; heure+1 [ `).
+  - L'heure doit être un entier compris entre **0 et 24**. Sinon, une erreur sera affichée.
 
-**[`-t heure`]**
-> Cette option permet de ne prendre en compte que les hits qui sont dans le créneau horaire
-correspondant à l’intervalle **[ heure ; heure+1 [**.
+## Tests
 
-> L'heure doit être un nombre entier compris dans l'intervalle **[ 0 ; 24 [**. Autrement, une erreur sera levée.
+Il est important d'effectuer des tests réguliers pour s'assurer que les nouvelles modifications n'affectent pas le bon fonctionnement de l'application. 
 
-## 5. Tests
----
-Les tests doivent être régulièrement exécutés afin de vérifier que les nouvelles fonctionnalités n'ont pas introduit d'erreur dans les anciennes.
+### Comment exécuter les tests :
 
-**Exécution des tests :**
-- Se placer dans le répertoire **`tests/`**
-- Exécuter **$ `./mktest.sh`**
+1. Accédez au répertoire **`tests/`**.
+2. Exécutez la commande suivante :
+
+```
+./mktest.sh
+```
+
+## Auteurs
+
+- Swan Maillard (maillard.swan@gmail.com)
+- Sarah Malard (sarah.malard@insa-lyon.fr)
+
+## Licence
+
+Ce projet est sous licence MIT. Veuillez consulter le fichier `LICENSE` pour plus d'informations.
