@@ -1,91 +1,91 @@
-# Extracteur de requêtes de log et analyseur de liens
+# Log Request Extractor and Link Analyzer
 
 ## Description
 
-Ce projet a pour but de faciliter l'analyse des fichiers de log en extrayant les requêtes et en visualisant les liens entre les différentes pages web. Il permet aux utilisateurs de mieux comprendre le comportement de leurs visiteurs et d'optimiser leur site en fonction des résultats.
+This project aims to facilitate the analysis of log files by extracting requests and visualizing the links between different web pages. It allows users to better understand their visitors' behavior and optimize their site based on the results.
 
-## Format du fichier de log
+## Log File Format
 
-Pour que l'application puisse fonctionner correctement, chaque ligne du fichier de log doit respecter le format suivant :
-
-```
-ADRESS_IP USER_LOGNAME AUTHENTICATED_USER [J/M/A:H:M:S TIMEZONE] "GET URL_TARGET HTTP_PROTOCOL" STATUS_CODE RESPONSE_SIZE "URL_REFERER" "USER_AGENT"
-```
-
-### Exemple :
+For the application to function correctly, each line of the log file must adhere to the following format:
 
 ```
-192.168.0.0 - - [10/fev/2023:10:14:31 +0200] "GET /page1.html HTTP/1.1" 200 666 "www.google.fr" "Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko"
+ADRESS_IP USER_LOGNAME AUTHENTICATED_USER [D/M/Y:H:M:S TIMEZONE] "GET URL_TARGET HTTP_PROTOCOL" STATUS_CODE RESPONSE_SIZE "URL_REFERER" "USER_AGENT"
 ```
 
-Les lignes ne respectant pas ce format ne seront pas prises en compte par l'application.
-
-## Fichier de configuration
-
-Un fichier nommé *config* doit être présent à la racine du projet. Il permet de définir une adresse locale à ignorer lors de l'analyse des URL. Le format doit être :
+### Example:
 
 ```
-BASE_URL=AdresseLocale
+192.168.0.0 - - [10/Feb/2023:10:14:31 +0200] "GET /page1.html HTTP/1.1" 200 666 "www.google.fr" "Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko"
 ```
 
-### Exemple de contenu du fichier `config` :
+Lines that do not conform to this format will not be considered by the application.
+
+## Configuration File
+
+A file named *config* must be present at the root of the project. It allows defining a local address to ignore during URL analysis. The format should be:
+
+```
+BASE_URL=LocalAddress
+```
+
+### Example content of the `config` file:
 
 ```
 BASE_URL=http://intranet-if.insa-lyon.fr/
 ```
 
-## Instructions de compilation
+## Compilation Instructions
 
-Pour compiler le projet, utilisez le Makefile fourni dans le répertoire. Les commandes disponibles sont les suivantes :
+To compile the project, use the provided Makefile in the directory. The available commands are as follows:
 
-- **`make`** : compile le projet et effectue l'édition des liens.
-- **`make dev`** : compile le projet en mode développement.
-- **`make fclean`** : supprime les fichiers objets et l'exécutable.
-- **`make help`** : affiche des informations sur les commandes disponibles.
+- **`make`**: Compiles the project and links it.
+- **`make dev`**: Compiles the project in development mode.
+- **`make fclean`**: Removes object files and the executable.
+- **`make help`**: Displays information about available commands.
 
-## Utilisation de l'application
+## Application Usage
 
-Pour exécuter l'application, utilisez la commande suivante :
+To run the application, use the following command:
 
 ```
-./analog [options] nomfichier.log
+./analog [options] filename.log
 ```
 
-### Fonctionnalités par défaut :
+### Default Functionality:
 
-Sans options, l'application extrait les requêtes du fichier spécifié (ex. : `monfichier.log`) et affiche sur la console les 10 pages les plus consultées par ordre décroissant. Aucune génération de fichier `.dot` n'a lieu.
+Without options, the application extracts requests from the specified file (e.g., `myfile.log`) and displays the top 10 most visited pages in descending order on the console. No `.dot` file generation occurs.
 
-### Options disponibles :
+### Available Options:
 
-- **`-g nomfichier.dot`** :
-  - Génère un fichier au format GraphViz nommé `nomfichier.dot`, représentant un graphe des liens entre les différentes pages.
+- **`-g filename.dot`**:
+  - Generates a GraphViz formatted file named `filename.dot`, representing a graph of links between the different pages.
 
-- **`-e`** :
-  - Exclut les requêtes correspondant à des ressources statiques telles que les images, les fichiers CSS et JavaScript.
-  - Les extensions supportées sont : **jpg, jpeg, png, gif, svg, webp, bmp, ico, js, css** (insensible à la casse).
+- **`-e`**:
+  - Excludes requests corresponding to static resources such as images, CSS files, and JavaScript.
+  - Supported extensions are: **jpg, jpeg, png, gif, svg, webp, bmp, ico, js, css** (case insensitive).
 
-- **`-t heure`** :
-  - Filtre les requêtes pour ne garder que celles dans l'intervalle d'une heure donnée (ex. : `[ heure ; heure+1 [ `).
-  - L'heure doit être un entier compris entre **0 et 24**. Sinon, une erreur sera affichée.
+- **`-t hour`**:
+  - Filters requests to retain only those within a specified one-hour interval (e.g., `[ hour ; hour+1 [ `).
+  - The hour must be an integer between **0 and 24**. Otherwise, an error will be displayed.
 
 ## Tests
 
-Il est important d'effectuer des tests réguliers pour s'assurer que les nouvelles modifications n'affectent pas le bon fonctionnement de l'application. 
+It is important to perform regular tests to ensure that new modifications do not affect the application's functionality.
 
-### Comment exécuter les tests :
+### How to Run Tests:
 
-1. Accédez au répertoire **`tests/`**.
-2. Exécutez la commande suivante :
+1. Navigate to the **`tests/`** directory.
+2. Execute the following command:
 
 ```
 ./mktest.sh
 ```
 
-## Auteurs
+## Authors
 
 - Swan Maillard (maillard.swan@gmail.com)
 - Sarah Malard (sarah.malard@insa-lyon.fr)
 
-## Licence
+## License
 
-Ce projet est sous licence MIT. Veuillez consulter le fichier `LICENSE` pour plus d'informations.
+This project is licensed under the MIT License. Please refer to the `LICENSE` file for more information.
